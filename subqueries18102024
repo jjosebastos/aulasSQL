@@ -1,0 +1,41 @@
+-- SUBQUERY
+SELECT nome 
+FROM Clientes
+WHERE id IN (SELECT cliente_id, nomeFROM Pedidos WHERE vl_pedido > 3000 group by cliente_id);
+
+
+-- * NOT IN
+-- SEMELHANTE LEFT EXCLUDE JOIN 
+SELECT nome 
+FROM Clientes
+WHERE id NOT IN (SELECT cliente_id FROM Pedidos);
+
+-- * EXISTS 
+SELECT nome
+FROM Clientes c
+WHERE EXISTS(SELECT 1 FROM Pedidos P  WHERE P.cliente_id = C.id);
+-- * NOT EXISTS 
+SELECT Nome
+FROM Clientes c
+WHERE NOT EXISTS (SELECT 1 FROM Pedidos p  WHERE p.cliente_id = c.id);
+-- * ANY
+SELECT Nome
+FROM Clientes
+WHERE idade > any (SELECT idade FROM Clientes WHERE Cidade = 'Sao Paulo');
+
+-- * UNION
+
+(SELECT Nome, Cidade FROM Clientes WHERE cidade = 'Sao Paulo')
+UNION
+(SELECT Nome, Cidade FROM Clientes where cidade = 'Rio de Janeiro');
+
+-- * ALL
+
+SELECT Nome 
+FROM Clientes C Where idade > ALL (SELECT idade FROM Clientes WHERE cidade = 'Sao Paulo');
+
+SELECT c.nome, p.vl_pedido
+FROM Clientes c INNER JOIN Pedidos p ON c.id = p.cliente_id
+WHERE vl_pedido > 3000;
+
+
